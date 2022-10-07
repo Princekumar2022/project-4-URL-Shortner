@@ -61,9 +61,12 @@ const createShortUrl = async function (req, res) {
         }
         //check long url present in redis or not
         const cacheUrl = await GET_ASYNC(`${longUrl}`);
+        if (cacheUrl) return res.status(200).send({ status: false, msg: " data from cache", data: JSON.parse(cacheUrl) })
+
+
         const shortUrlParesent = await urlModel.findOne({ longUrl: longUrl }).select({ _id: 0, createdAt: 0, updatedAt: 0, __v: 0 })
 
-        if (cacheUrl) {
+        if (shortUrlParesent) {
             return res.status(200).send({ status: true, data: shortUrlParesent })
         }
 
